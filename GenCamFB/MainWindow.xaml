@@ -10,12 +10,12 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Cam Json File" MinWidth="100"/>
-                <TextBox MinWidth="100"/>
+                <TextBlock MinWidth="100" Name ="JSONFile"/>
                 <Button Content="..." Click="LoadButton_Click" MinWidth ="50" Name="LoadButton"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Cam FB Xml" MinWidth="100"/>
-                <TextBox MinWidth="100"/>
+                <TextBlock MinWidth="100" Name ="FBFile"/>
                 <Button  Content="..."  Click="SaveButton_Click" MinWidth ="50" Name="SaveButton"/>
             </StackPanel>
         </StackPanel>
