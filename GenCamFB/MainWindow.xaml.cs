@@ -105,6 +105,7 @@ namespace GenCamFB
 
         private void CreateFB(string fileName)
         {
+            //Get what you named the XML file to name the FB 
             string name = fileName.Split('\\').Last();
             name = name.Split('.').First(); 
             PlcOpen fb = new PlcOpen("Bosch Rexroth", "CtrlX Core", "1.00", name);
