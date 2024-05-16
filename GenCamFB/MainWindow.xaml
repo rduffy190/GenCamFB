@@ -1,21 +1,28 @@
-﻿<Window x:Class="GenCamFB.MainWindow"
+﻿<Window x:Class="GenCamFB.CamToFB"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GenCamFB"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="CamToFB" Height="450" Width="800" >
     <Grid>
-        <StackPanel Orientation="Vertical">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" ></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Rectangle Grid.Row="0" Fill="Blue"/>
+        <Rectangle Grid.Row="1" Fill="Black"/>
+        <TextBlock Grid.Row="0" Height="50" Text="Cam To FB" Background="Blue" Foreground="White" FontSize="30" HorizontalAlignment="Center" Width="auto"></TextBlock>
+        <StackPanel Orientation="Vertical" Grid.Row="1">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Cam Json File" MinWidth="100"/>
-                <TextBlock MinWidth="100" Name ="JSONFile"/>
+                <TextBlock Text="Cam Json File" MinWidth="130" FontSize="18" Foreground="White"/>
+                <TextBlock MinWidth="100" Name ="JSONFile" FontSize="18" Foreground="White"/>
                 <Button Content="..." Click="LoadButton_Click" MinWidth ="50" Name="LoadButton"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Cam FB Xml" MinWidth="100"/>
-                <TextBlock MinWidth="100" Name ="FBFile"/>
+                <TextBlock Text="Cam FB Xml" MinWidth="130" FontSize="18" Foreground="White"/>
+                <TextBlock MinWidth="100" Name ="FBFile" FontSize="18" Foreground="White"/>
                 <Button  Content="..."  Click="SaveButton_Click" MinWidth ="50" Name="SaveButton"/>
             </StackPanel>
         </StackPanel>
