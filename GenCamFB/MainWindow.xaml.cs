@@ -108,7 +108,7 @@ namespace GenCamFB
             //Get what you named the XML file to name the FB 
             string name = fileName.Split('\\').Last();
             name = name.Split('.').First(); 
-            PlcOpen fb = new PlcOpen("Bosch Rexroth", "CtrlX Core", "1.00", name);
+            PlcOpen fb = new PlcOpen("Bosch Rexroth", "CtrlX Core", "1.10", name);
             fb.AddPou(name, POUType.Function_Block);
             fb.AddInput(name, "bExecute", "BOOL");
             fb.AddInput(name, "sAxisName", "string"); 
@@ -144,8 +144,11 @@ namespace GenCamFB
         private List<Variables> _locVar = new List<Variables>() { new Variables { Name = "_builder", Type = "flatbuffers.FlatBufferBuilder", Value = null },
                                                                     new Variables { Name = "_motion_sync_fbtypes_AxsCfgSingleFlexProfile", Type = "motion_sync_fbtypes_AxsCfgSingleFlexProfile", Value = null},
                                                                     new Variables { Name = "_motion_sync_fbtypes_CfgFlexProfileSegment", Type ="motion_sync_fbtypes_CfgFlexProfileSegment", Value = null },
+                                                                    new Variables { Name = "_flex_validate", Type = "motion_sync_fbtypes_AxsStateSingleFlexProfile", Value = null},
                                                                     new Variables { Name = "_write", Type = "DL_WriteNodeValue", Value = null },
                                                                     new Variables { Name = "_create", Type = "DL_CreateNodeValue" , Value = null},
+                                                                    new Variables { Name = "_read",   Type = "DL_ReadNodeValue", Value = null}, 
+                                                                    new Variables { Name = "_nodeValue_Valid", Type = "CXA_Datalayer.DL_NodeValue", Value = null },
                                                                     new Variables { Name = "_nodeValue_profile", Type = "CXA_Datalayer.DL_NodeValue", Value = null},
                                                                     new Variables { Name = "_nodeValue_validate", Type = "CXA_Datalayer.DL_NodeValue", Value = null},
                                                                     new Variables { Name = "_nodeValue_dummy", Type = "CXA_Datalayer.DL_NodeValue", Value = null },
@@ -161,8 +164,9 @@ namespace GenCamFB
                                                                      new Variables {Name = "UPDATE_PROFILE", Type = "UINT", Value = "2"},
                                                                      new Variables {Name = "SET_NODE_VALIDATE", Type = "UINT", Value = "3"},
                                                                      new Variables {Name = "CREATE_PROFILE", Type = "UINT", Value = "4"},
-                                                                     new Variables {Name = "DONE", Type = "UINT", Value = "5"},
-                                                                     new Variables {Name = "ERROR", Type = "UINT", Value = "6"}}; 
+                                                                     new Variables {Name = "CHECK_VALID", Type = "UINT", Value="5"},
+                                                                     new Variables {Name = "DONE", Type = "UINT", Value = "6"},
+                                                                     new Variables {Name = "ERROR", Type = "UINT", Value = "7"}}; 
         private static readonly List<string> _formulaKeys = new List<string> { "a0Formula", "a1Formula", "AmaxFormula", "j0Formula", "j1Formula", "JmaxFormula", "MasterRangeFormula", "gainFormula", "v0Formula", "v1Formula", "VmaxFormula" };
         private static readonly Dictionary<string, string> _keyTranslator = new Dictionary<string, string>() { { "a0Formula", "a0" }, {"a1Formula","a1"},/*{"AmaxFormula","limA0"},*/{"j0Formula", "j0" },
                                                                                                 {"j1Formula", "j1" },/*{"JmaxFormula","limj0" },*/{"MasterRangeFormula","range"},{"gainFormula","gain"},

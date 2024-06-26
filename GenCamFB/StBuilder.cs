@@ -64,15 +64,30 @@ namespace GenCamFB
                 "\t\t\tNodeName:= _nodeName, \r\n" +
                 "\t\t\tNodeValueIn:= _nodeValue_validate, \r\n" +
                 "\t\t\tNodeValueOut:= _nodeValue_dummy);\t" +
-                "\t\tIF _create.Done THEN \r\n" +
-                "\t\t\t_state:= DONE;\r\n\t\t\t\r" +
+                "\r\n\t\tIF _create.Done THEN \r\n" +
+                "\t\t\t_state:= CHECK_VALID;\r\n\t\t\t\r" +
                 "\n\t\tELSIF _create.Error THEN\r\n" +
                 "\t\t\t_state:= ERROR;\r\n\t\t\t\r" +
-                "\n\t\tEND_IF\t\r\n\t\r\n\tDONE: // done\r" +
+                "\n\t\tEND_IF\t\r\n\t" +
+                "\t\t\r\n\tCHECK_VALID: \r\n" +
+                "\t\t_nodeName := concat('motion/axs/',sAxisName); \r\n" +
+                "\t\t_nodeName := concat(_nodeName, '/state/functions/coupling/sync-motion/flexprofile/profiles/');\r\n" +
+                "\t\t_nodeName := concat(_nodeName,sProfileName); \r\n\t\t_read(Execute := TRUE, \r\n" +
+                "\t\t\t  NodeName := _nodeName, \r\n\t\t\t  NodeValue:= _nodeValue_Valid); \r\n" +
+                "\t\tIF _read.Error THEN \r\n\t\t\t_state := ERROR; \r\n" +
+                "\t\tELSIF _read.Done THEN \r\n" +
+                "\t\t\t_flex_validate.getRootAsAxsStateSingleFlexProfile(_nodeValue_Valid.getData(),_nodeValue_Valid.GetSize()); \r\n" +
+                "\t\t\tIF _flex_validate.getAccessState() = 'VALID' THEN \r\n" +
+                "\t\t\t\t_state := DONE; \r\n" +
+                "\t\t\tELSE \r\n" +
+                "\t\t\t\t_read(Execute := FALSE); \r\n" +
+                "\t\t\tEND_IF\r\n" +
+                "\t\tEND_IF" +
+                "\r\n\tDONE: // done\r" +
                 "\n\t\tbDone:= TRUE;\r\n\t\t\r" +
-                "\n\t\tIF NOT bExecute THEN _state:= 0; END_IF;\r\n\t\r" +
+                "\n\t\tIF NOT bExecute THEN _state:= IDLE; END_IF;\r\n\t\r" +
                 "\n\tERROR: // error\r\n\t\tbError:= TRUE;\r\n\t\t\r" +
-                "\n\t\tIF NOT bExecute THEN _state:= 0; END_IF;\r\n\t\r\n" +
+                "\n\t\tIF NOT bExecute THEN _state:= IDLE; END_IF;\r\n\t\r\n" +
                 "\t\r\nEND_CASE\r\n\r\n\r\n" +
                 "_execute:= bExecute;", _segCount);
             return _stBuild.ToString();
