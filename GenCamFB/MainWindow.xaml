@@ -25,6 +25,7 @@
                 <TextBlock MinWidth="100" Name ="FBFile" FontSize="18" Foreground="White"/>
                 <Button  Content="..."  Click="SaveButton_Click" MinWidth ="50" Name="SaveButton"/>
             </StackPanel>
+            <Button Content="Execute" Click="Execute_Click"  MinWidth="50" MinHeight="50" />
         </StackPanel>
     </Grid>
 </Window>

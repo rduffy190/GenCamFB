@@ -49,14 +49,18 @@ namespace GenCamFB
                 dynamic cam = JsonConvert.DeserializeObject(json);
                 dynamic camProfile = JsonConvert.DeserializeObject(cam.camBuilderProfileData.ToString());
                 dynamic profile = JsonConvert.DeserializeObject(camProfile.ProfileData.ToString());
-                foreach (dynamic variable in profile.Variables)
+                if (profile.Variables != null)
                 {
-                    Variables CamVars; 
-                    CamVars.Value = variable.Value.ToString();
-                    CamVars.Name = variable.Name.ToString();
-                    CamVars.Type = "Real"; 
-                    _variables.Add(CamVars);
+                    foreach (dynamic variable in profile.Variables)
+                    {
+                        Variables CamVars;
+                        CamVars.Value = variable.Value.ToString();
+                        CamVars.Name = variable.Name.ToString();
+                        CamVars.Type = "Real";
+                        _variables.Add(CamVars);
+                    }
                 }
+                int _seg = 0; 
                 foreach (dynamic camSegment in cam.segments)
                 {
                     Segment segment = new Segment();
@@ -84,7 +88,34 @@ namespace GenCamFB
 
                         }
                     }
+                    if (segment.PointData["range"].isFormula)
+                    {
+                        _stDXDYVars.Add("DX" + _seg.ToString() + " := " + segment.PointData["range"].Formula); 
+                    }
+                    else
+                    {
+                        _stDXDYVars.Add("DX" + _seg.ToString() + " := " + segment.PointData["range"].Value);
+                    }
+                    if (segment.PointData["gain"].isFormula)
+                    {
+                        _stDXDYVars.Add("DY" + _seg.ToString() + " := " + segment.PointData["gain"].Formula);
+                    }
+                    else
+                    {
+                        _stDXDYVars.Add("DY" + _seg.ToString() + " := " + segment.PointData["gain"].Value);
+                    }
+                    Variables DX = new Variables();
+                    DX.Name = "DX" + _seg.ToString();
+                    DX.Value = null;
+                    DX.Type = "Real";
+                    _locVar.Add(DX);
+                    Variables DY = new Variables();
+                    DY.Name = "DY" + _seg.ToString();
+                    DY.Value = null;
+                    DY.Type = "Real";
+                    _locVar.Add(DY);
                     _segments.Add(segment);
+                    _seg++; 
                 }
             #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
@@ -98,8 +129,20 @@ namespace GenCamFB
             sfd.ShowDialog();
             if (sfd.FileName.ToLower().Contains(".xml"))
             {
-                CreateFB(sfd.FileName);
+               
                 this.FBFile.Text = sfd.FileName;
+            }
+        }
+        private void Execute_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.FBFile.Text.ToLower().Contains(".xml"))
+            {
+                CreateFB(this.FBFile.Text);
+                string messageBoxText = "Done"; 
+                string caption = "FB Generated";
+                MessageBoxButton button = MessageBoxButton.OK; 
+                MessageBoxImage image = MessageBoxImage.Information;
+                MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, image);
             }
         }
 
@@ -130,7 +173,7 @@ namespace GenCamFB
                 fb.AddConstVar(name, variable.Name, variable.Type);
                 fb.InitialValue(name, variable.Name, variable.Value);
             }
-            StBuilder stBuilder = new StBuilder();
+            StBuilder stBuilder = new StBuilder(_stDXDYVars);
             foreach (Segment segment in _segments)
             {
                 stBuilder.addSegment(segment);
@@ -166,10 +209,13 @@ namespace GenCamFB
                                                                      new Variables {Name = "CREATE_PROFILE", Type = "UINT", Value = "4"},
                                                                      new Variables {Name = "CHECK_VALID", Type = "UINT", Value="5"},
                                                                      new Variables {Name = "DONE", Type = "UINT", Value = "6"},
-                                                                     new Variables {Name = "ERROR", Type = "UINT", Value = "7"}}; 
+                                                                     new Variables {Name = "ERROR", Type = "UINT", Value = "7"}};
+        private List<String> _stDXDYVars = new List<string>();
         private static readonly List<string> _formulaKeys = new List<string> { "a0Formula", "a1Formula", "AmaxFormula", "j0Formula", "j1Formula", "JmaxFormula", "MasterRangeFormula", "gainFormula", "v0Formula", "v1Formula", "VmaxFormula" };
         private static readonly Dictionary<string, string> _keyTranslator = new Dictionary<string, string>() { { "a0Formula", "a0" }, {"a1Formula","a1"},/*{"AmaxFormula","limA0"},*/{"j0Formula", "j0" },
                                                                                                 {"j1Formula", "j1" },/*{"JmaxFormula","limj0" },*/{"MasterRangeFormula","range"},{"gainFormula","gain"},
                                                                                                 {"v0Formula","v0"},{"v1Formula","v1"},{"VmaxFormula","limV"} };
+
+     
     }
 }

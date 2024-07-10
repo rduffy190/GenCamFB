@@ -8,7 +8,11 @@ namespace GenCamFB
 {
     public class StBuilder
     {
-        public StBuilder() {
+        public StBuilder(List<string> Init) {
+            foreach(string inits in Init)
+            {
+                _stBuild = _stBuild.Append(inits + ";\r\n");
+            }
             _stBuild =_stBuild.Append("IF bExecute AND NOT _execute THEN\r\n" +
                 "\t_write(Execute:= FALSE);\t\r\n\t_create(Execute:= FALSE);\r\n\r\n" +
                 "\t_state:= BUILD_BUFFER;\r\n\t\r\nEND_IF\r\n\r\nCASE _state OF\r\n" +
